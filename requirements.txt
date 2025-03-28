@@ -2,5 +2,4 @@ streamlit==1.44.0
 pandas==2.2.3
 numpy==2.2.4
 google-generativeai==0.5.2
-sqlite3
 openpyxl
