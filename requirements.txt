@@ -1,0 +1,6 @@
+streamlit
+pandas
+numpy
+sqlite3
+google-generativeai
+openpyxl
