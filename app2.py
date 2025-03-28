@@ -107,6 +107,10 @@ if uploaded_file is not None:
         Example 5:
         User: "How many students failed in [Subject Name]?"
         SQL Query: SELECT CAST(SUM(CASE WHEN `{subject_columns[0]}` IN ('F', 'AB') THEN 1 ELSE 0 END) AS REAL) AS Fail_Count FROM student_performance;
+
+        Example 6:
+        User: "How many students failed in all subjects?"
+        SQL Query: SELECT COUNT(CASE WHEN Calculus Final Grade = 'F' AND Programming AND Problem Solving Final Grade = 'F' AND Basic Electrical and Electronics Engineering Final Grade = 'F' AND Engineering Graphics and Design Final Grade = 'F' AND Engineering Workshop Final Grade = 'F' AND Professional Ethics Final Grade = 'F' AND Design Thinking Final Grade = 'F' THEN 1 ELSE NULL END)
         """
 
         # System prompt including dataset metadata
@@ -160,13 +164,14 @@ if uploaded_file is not None:
             try:
                 with sqlite3.connect(":memory:") as conn:
                     raw_df.to_sql("student_performance", conn, index=False, if_exists="replace")  # Recreate in-memory DB
+                    sql_query = sql_query.replace("```sqlite", "").replace("```", "").strip()
                     result_df = pd.read_sql_query(sql_query, conn)
 
                 # Format result into a natural response
                 if not result_df.empty:
                     if "Pass_Percentage" in result_df.columns:
-                        result_value = result_df.iloc[0, 0]
-                        result_text = f"📊 The pass percentage in {subject} is **{result_value:.2f}%**."
+                        #result_value = float(result_df.iloc[0, 0])
+                        result_text = f"✅ Here’s what I found:\n\n{result_df.to_markdown(index=False)}"
                     elif "avg_gpa" in result_df.columns:
                         result_text = f"🏆 The campus with the highest average GPA is **{result_df.iloc[0,0]}** with an average GPA of **{result_df.iloc[0,1]:.2f}**."
                     else:
