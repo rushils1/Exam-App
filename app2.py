@@ -99,6 +99,14 @@ if uploaded_file is not None:
         Example 3:
         User: "What is the pass percentage in [Subject Name]?"
         SQL Query: SELECT CAST(SUM(CASE WHEN `{subject_columns[0]}` NOT IN ('F', 'AB') THEN 1 ELSE 0 END) AS REAL) * 100 / COUNT(*) AS Pass_Percentage FROM student_performance;
+
+        Example 4:
+        User: "How many students passed in [Subject Name]?"
+        SQL Query: SELECT CAST(SUM(CASE WHEN `{subject_columns[0]}` NOT IN ('F', 'AB') THEN 1 ELSE 0 END) AS REAL) AS Pass_Count FROM student_performance;
+
+        Example 5:
+        User: "How many students failed in [Subject Name]?"
+        SQL Query: SELECT CAST(SUM(CASE WHEN `{subject_columns[0]}` IN ('F', 'AB') THEN 1 ELSE 0 END) AS REAL) AS Fail_Count FROM student_performance;
         """
 
         # System prompt including dataset metadata
